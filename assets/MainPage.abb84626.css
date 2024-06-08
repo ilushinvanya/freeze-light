@@ -1,1 +1,0 @@
-.mirror video,.mirror canvas{transform:scaleX(-1)}video{position:absolute;z-index:9;width:100%}canvas{position:absolute;z-index:10;width:100%;display:block;mix-blend-mode:lighten}
