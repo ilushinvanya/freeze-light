@@ -12,44 +12,51 @@
 
 		<div class="absolute-bottom">
 			<q-separator/>
-			<div class="flex justify-around q-pa-md">
-				<q-btn
-					:color="isInitStream ? 'primary' : 'default'"
-					class="q-pa-none"
-					size="lg"
-					fab
-					:outline="!isInitStream"
-					rounded
-					@click="toggleStream"
-				>
-					<q-icon
-						size="2em"
-						color="white"
-						name="videocam"
-					/>
-				</q-btn>
-				<q-btn
-					color="white"
-					class="q-pa-none"
-					fab
-					@click="playPause"
-					size="lg"
-					:outline="isRecord"
-				>
-					<q-icon
-						size="4em"
-						color="red"
-						:name="isRecord ? 'stop' : 'fiber_manual_record'"
-					/>
-				</q-btn>
-				<div></div>
+			<div class="row q-pa-md">
+				<div class="col col-4 flex flex-center">
+					<q-btn
+							:color="isInitStream ? 'primary' : 'default'"
+							class="q-pa-none"
+							size="lg"
+							fab
+							:outline="!isInitStream"
+							rounded
+							@click="toggleStream"
+						>
+							<q-icon
+								size="2em"
+								color="white"
+								name="videocam"
+							/>
+						</q-btn>
+				</div>
+				<div class="col col-4 flex flex-center">
+					<q-btn
+							color="white"
+							class="q-pa-none"
+							fab
+							@click="playPause"
+							size="lg"
+							:outline="isRecord"
+						>
+							<q-icon
+								size="4em"
+								color="red"
+								:name="isRecord ? 'stop' : 'fiber_manual_record'"
+							/>
+						</q-btn>
+				</div>
+				<div class="col col-4"></div>
 			</div>
 			<q-separator/>
-			<div class="flex justify-around q-pa-md">
-				<q-btn no-caps color="info" rounded @click="save" size="lg" label="Save" icon="save"/>
+			<div class="row q-pa-md">
+				<div class="col col-4 flex flex-center">
+					<q-btn no-caps color="info" rounded @click="save" size="lg" label="Save" icon="save"/>
+				</div>
 
-				<q-btn color="primary" @click="save" size="lg" fab icon="menu">
-					<q-menu>
+				<div class="col col-4 flex flex-center">
+					<q-btn color="primary" @click="save" size="lg" fab icon="menu">
+						<q-menu>
 						<q-card>
 							<q-select
 								v-if="videoDevices.length"
@@ -64,14 +71,18 @@
 								@change="changeCamera"
 							/>
 							<div class="column items-center">
-								<li>Отзеркалить</li>
-								<li>Ваш список фоток</li>
+								<div>Отзеркалить</div>
+								<div>Ваш список фоток</div>
 							</div>
 						</q-card>
 					</q-menu>
-				</q-btn>
+					</q-btn>
+				</div>
 
-				<q-btn no-caps color="orange" rounded @click="reset" size="lg" label="Reset" />
+				<div class="col col-4 flex flex-center">
+					<q-btn no-caps color="orange" rounded @click="reset" size="lg" label="Reset" />
+				</div>
+
 			</div>
 		</div>
 	</div>
@@ -86,8 +97,8 @@
 	const selectedDeviceId = ref<string | null>(null);
 	const videoDevices = ref<MediaDeviceInfo[]>([]);
 
-	const capturedImage = ref<string | null>(null);
-	const timer = ref(0);
+	// const capturedImage = ref<string | null>(null);
+	// const timer = ref(0);
 
 	const getVideoDevices = async () => {
 		const devices = await navigator.mediaDevices.enumerateDevices();
