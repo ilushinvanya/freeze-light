@@ -9,7 +9,7 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 const { configure } = require('quasar/wrappers');
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs');
 
 module.exports = configure(function(/* ctx */) {
 	return {
@@ -95,10 +95,10 @@ module.exports = configure(function(/* ctx */) {
 
 		// Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
 		devServer: {
-			https: {
-				key: fs.readFileSync('cert/server.key'),
-				cert: fs.readFileSync('cert/server.crt'),
-			},
+			// https: {
+			// 	key: fs.readFileSync('cert/server.key'),
+			// 	cert: fs.readFileSync('cert/server.crt'),
+			// },
 
 			open: true, // opens browser window automatically
 		},
