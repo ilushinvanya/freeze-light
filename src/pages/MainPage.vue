@@ -8,7 +8,7 @@
 			<canvas ref="canvas"></canvas>
 		</div>
 
-		<div class="fixed-bottom z-max">
+		<div class="fixed-bottom z-fab">
 			<q-separator/>
 			<div class="row q-pa-md">
 				<div class="col col-4 flex flex-center">
@@ -64,7 +64,8 @@
 								color="white"
 								name="flip_camera_ios"
 							/>
-							<q-menu>
+							<q-menu :class="{ 'left-0-important max-width-none-important' : isMobile }"
+									:style="{ 'width' : width }" :max-width="width">
 								<div class="q-pa-md">
 									<q-select
 										v-if="videoDevices.length"
@@ -117,8 +118,16 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, onMounted } from 'vue';
+	import { ref, computed, onMounted } from 'vue';
+	import { useQuasar } from 'quasar';
 	import { useTimer } from 'src/hooks/useTimer';
+
+	const $q = useQuasar();
+
+	const isMobile = $q.platform.is.mobile;
+
+	const width = computed(() => isMobile ? '100%' : 'auto')
+
 
 	const video = ref<HTMLVideoElement | null>(null);
 	const canvas = ref<HTMLCanvasElement | null>(null);
@@ -275,4 +284,10 @@ canvas {
 	mix-blend-mode: lighten;
 }
 
+.left-0-important {
+	left: 0 !important;
+}
+.max-width-none-important {
+	max-width: none !important;
+}
 </style>
