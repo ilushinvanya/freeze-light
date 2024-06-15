@@ -1,6 +1,6 @@
 {
   "name": "freeze-light",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Потрясающая имитация длиной выдержки фотоаппарата",
   "productName": "Freeze light",
   "author": "Иван Илюшин <man@bonusuber.ru>",
@@ -33,7 +33,6 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",
     "prettier": "^2.5.1",
-    "push-dir": "^0.4.1",
     "typescript": "^4.5.4"
   },
   "engines": {
