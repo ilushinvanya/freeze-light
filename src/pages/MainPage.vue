@@ -52,7 +52,7 @@
 			<div class="row q-pa-md">
 				<div class="col col-4 flex flex-center">
 					<div>
-						<q-btn no-caps color="info" rounded @click="save" size="lg" label="Save" icon="save"/>
+						<q-btn no-caps color="info" rounded @click="save" size="lg" label="Save"/>
 					</div>
 				</div>
 
@@ -69,7 +69,7 @@
 								<div class="q-pa-md">
 									<q-select
 										v-if="videoDevices.length"
-										v-model="selectedDeviceId"
+										v-model="selectedDevice"
 										:options="videoDevices"
 										option-label="label"
 										option-value="deviceId"
@@ -77,7 +77,7 @@
 										outlined
 										dense
 										class="q-ma-md"
-										@change="changeCamera"
+										@update:model-value="changeCamera"
 									/>
 								</div>
 							</q-menu>
@@ -108,7 +108,14 @@
 			<q-card>
 				<img :src="capturedImage" />
 				<q-card-actions>
-					<q-btn @click="downloadImage">Download</q-btn>
+					<q-btn
+						no-caps
+						color="info"
+						rounded
+						label="Download"
+						@click="downloadImage" icon="save"/>
+					<q-space/>
+					<q-btn no-caps label="Close" @click="isOpenImage = false"/>
 				</q-card-actions>
 			</q-card>
 
@@ -122,6 +129,10 @@
 	import { useQuasar } from 'quasar';
 	import { useTimer } from 'src/hooks/useTimer';
 
+	interface IDevice {
+		label: string;
+		deviceId: string
+	}
 	const $q = useQuasar();
 
 	const isMobile = $q.platform.is.mobile;
@@ -132,18 +143,17 @@
 	const video = ref<HTMLVideoElement | null>(null);
 	const canvas = ref<HTMLCanvasElement | null>(null);
 
-	const selectedDeviceId = ref<string | null>(null);
-	const videoDevices = ref<MediaDeviceInfo[]>([]);
-
+	const selectedDevice = ref<IDevice | null>(null);
+	const videoDevices = ref<IDevice[]>([]);
 
 	const { time, startInterval, stopInterval, continueInterval } = useTimer();
 
 	const getVideoDevices = async () => {
-		await navigator.mediaDevices.getUserMedia({audio: true, video: true});
+		await navigator.mediaDevices.getUserMedia({audio: false, video: true});
 		const devices = await navigator.mediaDevices.enumerateDevices();
-		videoDevices.value = devices.filter(device => device.kind === 'videoinput');
+		videoDevices.value = devices.filter(device => device.kind === 'videoinput').map(({ label, deviceId }) => ({ label, deviceId }));
 		if (videoDevices.value.length > 0) {
-			selectedDeviceId.value = videoDevices.value[0].deviceId;
+			selectedDevice.value = videoDevices.value[0];
 		}
 	};
 	const startStream = async (deviceId: string, setSize = true) => {
@@ -182,15 +192,15 @@
 			destroyStream()
 		}
 		else {
-			if (selectedDeviceId.value) {
-				await startStream(selectedDeviceId.value, false);
+			if (selectedDevice.value) {
+				await startStream(selectedDevice.value.deviceId, false);
 			}
 		}
 	};
 	onMounted(async () => {
 		await getVideoDevices();
-		if (selectedDeviceId.value) {
-			await startStream(selectedDeviceId.value);
+		if (selectedDevice.value) {
+			await startStream(selectedDevice.value.deviceId);
 		}
 	});
 
@@ -210,9 +220,9 @@
 		}
 	};
 
-	const changeCamera = () => {
-		if (selectedDeviceId.value) {
-			startStream(selectedDeviceId.value);
+	const changeCamera = (event: IDevice) => {
+		if (selectedDevice.value) {
+			startStream(event.deviceId);
 		}
 	};
 
@@ -245,8 +255,8 @@
 	}
 
 	const reset = () => {
-		if (selectedDeviceId.value) {
-			startStream(selectedDeviceId.value);
+		if (selectedDevice.value) {
+			startStream(selectedDevice.value.deviceId);
 		}
 		stopInterval();
 		isRecord.value = false;
